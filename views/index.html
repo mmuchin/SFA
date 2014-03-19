@@ -1,0 +1,114 @@
+<!-- views/index.html -->
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Revealer - Reveal.js multiplexer</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="components/reveal.js/css/reveal.min.css">
+        <link rel="stylesheet" href="components/reveal.js/css/theme/default.css" id="theme">
+    </head>
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <section>
+                    <h1>Solution Overview</h1>
+                    <ul>
+                    <li class="fragment">Technology used</li>
+                    <li class="fragment">Structure of the application</li>
+                    <li class="fragment">Styling / LESS</li>
+                    <li class="fragment">Templates</li>
+                    <li class="fragment">JavaScript</li>
+                    <li class="fragment">Debugging</li>
+                    </ul>
+                </section>
+
+                <!-- Technology used -->
+                <section>
+                    <h1>Technology used</h1>
+                    <ul>
+                        <li class="fragment">Bootstrap 2.3.1 / LESS (server side compilation)</li>
+                        <li class="fragment">jQuery</li>
+                        <li class="fragment">Knockout</li>
+                        <li class="fragment">Sammy</li>
+                        <li class="fragment">Inheritance / KeyoraJS</li>
+                    </ul>
+                </section>
+
+
+                <!-- Strucutre of the application -->
+                <section>
+                    <h1>Structure of the application</h1>
+                </section>
+                
+                <section>
+                    <h1>Idea behind iframes</h1>
+                    <ul>
+                        <li class="fragment">Difference between banner and application</li>
+                        <li class="fragment">How banner sync?</li>
+                        <li class="fragment">How to get the application code?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Console?</h1>
+                    <p class="fragment">How to modify HTML?</p>
+                    <p class="fragment">How to modify JavaScript?</p>
+                    <p class="fragment">Creating Content</p>
+                    <p class="fragment">Linking Files</p>
+                </section>
+
+                <!-- Styling / LESS -->
+                <section>
+                    <h1>Styling / LESS</h1>
+                    <p>Server side compilation</p>
+                    <p>Why I don't see my changes?</p>
+                </section>
+
+                <!-- Templates -->
+                <section>
+                    <h1>Templates</h1>
+                    <p>Knockout template</p>
+                    <p>Templates in a subpage</p>
+                </section>
+
+                <!-- JavaScript -->
+                <section>
+                    <h1>JavaScript</h1>
+                    <p class="fragment">JQuery</p>
+                    <p class="fragment">Knockout</p>
+                    <p class="fragment">JSON</p>
+                    <p class="fragment">KeyoaJS</p>
+                </section>
+
+                <!-- Debugging -->
+                <section>
+                    <h1>Debugging</h1>
+                </section>
+            </div>
+        </div>
+        <script src="components/reveal.js/js/reveal.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            Reveal.initialize({history: true});
+            var socket = io.connect("http://192.168.2.13:3000");
+            
+            var notifyServer = function (event) {
+                data = {
+                    indexv: Reveal.getIndices().v,
+                    indexh: Reveal.getIndices().h,
+                    indexf : Reveal.getIndices().f || 0
+                };
+                socket.emit("slidechanged", data);
+            };
+
+            Reveal.addEventListener("slidechanged", notifyServer);
+            Reveal.addEventListener("fragmentshown", notifyServer);
+            Reveal.addEventListener("fragmenthidden", notifyServer);
+
+            socket.on("slidechanged", function (data) {
+                Reveal.slide(data.indexh, data.indexv, data.indexf);
+            })
+        </script>
+    </body>
+</html>
